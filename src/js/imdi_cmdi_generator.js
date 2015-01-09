@@ -18,18 +18,13 @@ limitations under the License.
 imdi_environment.cmdi_generator = function(){
 	"use strict";
 	
-	var corpus = imdi_environment.workflow[0];
-	var resources = imdi_environment.workflow[1];
-	var actor = imdi_environment.workflow[2];
-	var session = imdi_environment.workflow[3];
-	
 	var parent = imdi_environment;
 	
 	var already_warned_for_invalid_dates = false;
 	var already_warned_for_invalid_birth_dates = false;
 
-	var imdi_corpus_profile="clarin.eu:cr1:p_1274880881885";
-	var imdi_session_profile="clarin.eu:cr1:p_1271859438204";
+	var imdi_corpus_profile = "clarin.eu:cr1:p_1274880881885";
+	var imdi_session_profile = "clarin.eu:cr1:p_1271859438204";
 
 	var createIDREFS = function(){
 
@@ -65,7 +60,7 @@ imdi_environment.cmdi_generator = function(){
 	};
 
 
-	var create_cmdi_session = function(session_id){
+	var create_cmdi_session = function(sessiond){
 		
 		xml.header();
 		insert_cmdi_header("session");
@@ -86,7 +81,7 @@ imdi_environment.cmdi_generator = function(){
 		that is why there needs to be an extra method for creating cmdi sessions
 		luckily, it is here:
 		*/
-		insert_cmdi_session_data(session_id);
+		insert_cmdi_session_data(session);
 		
 		xml.close("Components");
 		
@@ -108,18 +103,18 @@ imdi_environment.cmdi_generator = function(){
 	};
 
 
-	var insert_cmdi_session_data = function(session_id){
+	var insert_cmdi_session_data = function(session){
 		
 		xml.open("Session");
-		xml.element("Name", get(session.dom_element_prefix+session_id+"_session_name"));
-		xml.element("Title", get(session.dom_element_prefix+session_id+"_session_title"));
+		xml.element("Name", session.session_name);
+		xml.element("Title", session.session_title);
 		
-		xml.element("Date", APP.forms.getDateStringByDateInput(session.dom_element_prefix+session_id+"_session_date") || "Unspecified");
+		xml.element("Date", APP.forms.getDateStringByDateInput(session.session.date) || "Unspecified");
 		
 		// if a valid session date cannot be parsed from the form BUT there has been some input by the user
 		// AND the user has not been warned before about that, warn him or her
 		if (
-			APP.forms.isUserDefinedDateInvalid(session.dom_element_prefix+session_id+"_session_date")
+			APP.forms.isUserDefinedDateInvalid(session.session.date)
 			&& (already_warned_for_invalid_dates == false)
 		){
 		
@@ -135,23 +130,23 @@ imdi_environment.cmdi_generator = function(){
 
 		xml.open("MDGroup");
 		xml.open("Location");
-		xml.element("Continent", get(session.dom_element_prefix+session_id+"_session_location_continent"));
-		xml.element("Country", get(session.dom_element_prefix+session_id+"_session_location_country"));
-		xml.element("Region", get(session.dom_element_prefix+session_id+"_session_location_region"));
-		xml.element("Address", get(session.dom_element_prefix+session_id+"_session_location_address"));
+		xml.element("Continent", session.session.location.continent);
+		xml.element("Country", session.session.location.country);
+		xml.element("Region", session.session.location.region);
+		xml.element("Address", session.session.location.address);
 		xml.close("Location");
 		
 		
 		xml.open("Project");
-		xml.element("Name",get(session.dom_element_prefix+session_id+"_project_name"));
-		xml.element("Title",get(session.dom_element_prefix+session_id+"_project_title"));
-		xml.element("Id",get(session.dom_element_prefix+session_id+"_project_id"));
+		xml.element("Name", session.project.name);
+		xml.element("Title", session.project.title);
+		xml.element("Id", session.project.id);
 		
 		xml.open("Contact");
-		xml.element("Name",get(session.dom_element_prefix+session_id+"_project_contact_name"));
-		xml.element("Address",get(session.dom_element_prefix+session_id+"_project_contact_address"));
-		xml.element("Email",get(session.dom_element_prefix+session_id+"_project_contact_email"));
-		xml.element("Organisation",get(session.dom_element_prefix+session_id+"_project_contact_organisation"));
+		xml.element("Name", session.project.contact.name);
+		xml.element("Address", session.project.contact.address);
+		xml.element("Email", session.project.contact.email);
+		xml.element("Organisation", session.project.contact.organisation);
 		xml.close("Contact");
 		xml.close("Project");
 		xml.element("Keys", "");
@@ -159,9 +154,9 @@ imdi_environment.cmdi_generator = function(){
 		
 		xml.open("Content");
 		
-		xml.element("Genre",get(session.dom_element_prefix+session_id+"_content_genre"));
-		xml.element("SubGenre",get(session.dom_element_prefix+session_id+"_content_subgenre"));
-		xml.element("Task",get(session.dom_element_prefix+session_id+"_content_task"));
+		xml.element("Genre", session.content.genre);
+		xml.element("SubGenre", session.content.subgenre);
+		xml.element("Task", session.content.task);
 		
 		xml.element("Modalities", "");
 		//no input yet
@@ -170,11 +165,11 @@ imdi_environment.cmdi_generator = function(){
 		//no input yet
 		
 		xml.open("CommunicationContext");
-		xml.element("Interactivity",get(session.dom_element_prefix+session_id+"_content_communication_context_interactivity"));
-		xml.element("PlanningType",get(session.dom_element_prefix+session_id+"_content_communication_context_interactivity"));
-		xml.element("Involvement",get(session.dom_element_prefix+session_id+"_content_communication_context_involvement"));	
-		xml.element("SocialContext",get(session.dom_element_prefix+session_id+"_content_communication_context_socialcontext"));
-		xml.element("EventStructure",get(session.dom_element_prefix+session_id+"_content_communication_context_eventstructure"));
+		xml.element("Interactivity", session.content.communication_context.interactivity);
+		xml.element("PlanningType", session.content.communication_context.planning_type);
+		xml.element("Involvement", session.content.communication_context.involvement);	
+		xml.element("SocialContext", session.content.communication_context.socialcontext);
+		xml.element("EventStructure", session.content.communication_context.eventstructure);
 		xml.element("Channel","Unknown");
 		/* no input yet. channel must be one of
 		<item ConceptLink="http://www.isocat.org/datcat/DC-2591">Unknown</item>
@@ -203,11 +198,11 @@ imdi_environment.cmdi_generator = function(){
 		xml.open("Actors");
 		
 		xml.open("descriptions");
-			xml.element("Description", get(session.dom_element_prefix+session_id+"_actors_description"));
+			xml.element("Description", session.content.communication_context.actors.description);
 		xml.close("descriptions");
 		
-		for (var a=0;a<session.sessions[session.getSessionIndexFromID(session_id)].actors.actors.length;a++){
-			insert_cmdi_actor(session_id,session.sessions[session.getSessionIndexFromID(session_id)].actors.actors[a]);
+		for (var a = 0; a < session.actors.actors.length; a++){
+			insert_cmdi_actor(session_id, session.actors.actors[a]);
 		}
 		
 		xml.close("Actors");  
@@ -217,16 +212,16 @@ imdi_environment.cmdi_generator = function(){
 		
 		var id;
 		
-		for (var r = 0; r < session.sessions[session.getSessionIndexFromID(session_id)].resources.resources.mediaFiles.length;r++){  
+		for (var r = 0; r < session.resources.resources.mediaFiles.length; r++){  
 		
-			id = session.sessions[session.getSessionIndexFromID(session_id)].resources.resources.mediaFiles[r].id;
+			id = session.resources.resources.mediaFiles[r].id;
 		
-			insert_cmdi_mediafile(get(session.dom_element_prefix+session_id+'_mediafile_'+id+"_name"),get(session.dom_element_prefix+session_id+'_mediafile_'+id+"_size"));
+			insert_cmdi_mediafile(get(session.dom_element_prefix+session_id+'_mediafile_'+id+"_name"), get(session.dom_element_prefix+session_id+'_mediafile_'+id+"_size"));
 		}
 		
-		for (r=0;r<session.sessions[session.getSessionIndexFromID(session_id)].resources.resources.writtenResources.length;r++){  
+		for (r = 0; r < session.resources.resources.writtenResources.length; r++){  
 
-			id = session.sessions[session.getSessionIndexFromID(session_id)].resources.resources.writtenResources[r].id;	
+			id = session.resources.resources.writtenResources[r].id;	
 
 			insert_cmdi_written_resource(get(session.dom_element_prefix+session_id+'_mediafile_'+id+"_name"),get(session.dom_element_prefix+session_id+'_mediafile_'+id+"_size"));
 		}
@@ -236,15 +231,11 @@ imdi_environment.cmdi_generator = function(){
 		
 		xml.close("Session");
 
-		
-		
 	};
 
 	
 	var insert_content_languages = function (session_id) {
 
-		
-		
 		var languages = corpus.content_languages.content_languages;
 	
 		for (var l=0;l<languages.length;l++){  //for all content languages // no session separate languages yet
@@ -255,16 +246,12 @@ imdi_environment.cmdi_generator = function(){
 			xml.close("Content_Language");
 	
 		}
-
-		
 		
 	};
 	
 
-	var insert_cmdi_written_resource = function(link,size){
+	var insert_cmdi_written_resource = function(link, size){
 
-		
-		
 		xml.open("WrittenResource");
 
 		xml.element("ResourceLink",link);
@@ -273,9 +260,9 @@ imdi_environment.cmdi_generator = function(){
 		xml.element("Date","Unspecified");
 		//no input yet, but should come soon
 		
-		xml.element("Type",resources.getFileType(link).type);
-		xml.element("SubType",resources.getFileType(link).type);
-		xml.element("Format",resources.getFileType(link).mimetype);
+		xml.element("Type", resources.getFileType(link).type);
+		xml.element("SubType", resources.getFileType(link).type);
+		xml.element("Format", resources.getFileType(link).mimetype);
 		xml.element("Size",size);
 		
 		xml.open("Validation");
@@ -323,10 +310,10 @@ imdi_environment.cmdi_generator = function(){
 
 		
 		xml.open("MediaFile");
-		xml.element("ResourceLink",link);
-		xml.element("Type",resources.getFileType(link).type);
-		xml.element("Format",resources.getFileType(link).mimetype);
-		xml.element("Size",size);
+		xml.element("ResourceLink", link);
+		xml.element("Type", resources.getFileType(link).type);
+		xml.element("Format", resources.getFileType(link).mimetype);
+		xml.element("Size", size);
 		
 		xml.element("Quality","Unspecified");
 		// no input yet
@@ -361,16 +348,14 @@ imdi_environment.cmdi_generator = function(){
 		xml.element("Keys","");
 		
 		xml.close("MediaFile");
-
 		
 	};
 
 
-	var insert_cmdi_actor = function(session_id,actor_id){
+	var insert_cmdi_actor = function(session_id, actor_id){
 
 		var i = actor.getIndexByID(actor_id);
 		var ac = actor.actors[i];
-
 		
 		xml.open("Actor");
 		xml.element("Role",ac.role);
@@ -382,7 +367,7 @@ imdi_environment.cmdi_generator = function(){
 		
 		//Age field
 		xml.open("Age");
-		actor.getAge(session_id,actor_id);
+		actor.getAge(session_id, actor_id);
 		xml.close("Age");	
 		//End of age field
 		
@@ -404,7 +389,7 @@ imdi_environment.cmdi_generator = function(){
 		}
 		
 		
-		xml.element("Sex",ac.sex);
+		xml.element("Sex", ac.sex);
 		xml.element("Education",(ac.education !== "") ? ac.education : "Unspecified" );
 		xml.element("Anonymized",(ac.anonymized) ? "true" : "false"); 
 		
@@ -433,30 +418,26 @@ imdi_environment.cmdi_generator = function(){
 			xml.element("MotherTongue",(ac.languages[l].MotherTongue) ? "true" : "false");
 			xml.element("PrimaryLanguage",(ac.languages[l].PrimaryLanguage) ? "true" : "false");		
 
-			
 			xml.close("Actor_Language");
 		
 		}
 
 		xml.close("Actor_Languages");
 		
-		xml.close("Actor");
-
-		
+		xml.close("Actor");		
 		
 	};
 
 
-	var create_cmdi_corpus = function(){
+	var create_cmdi_corpus = function(corpus, sessions){
 		
 		var IDREFS = [];
 		
-		
-		xml.header;
+		xml.header();
 
 		insert_cmdi_header("corpus");
 
-		insert_header(get("metadata_creator"),today()+"+01:00",imdi_corpus_profile);
+		insert_header(get("metadata_creator"), today() + "+01:00", imdi_corpus_profile);
 
 		xml.open("Resources");
 
@@ -464,13 +445,13 @@ imdi_environment.cmdi_generator = function(){
 		if (session.sessions.length > 0){
 			xml.open("ResourceProxyList");
 			
-			for (var i=1;i<=session.sessions.length;i++){  
+			for (var i = 0; i < session.sessions.length; i++){  
 			
 				IDREFS.push(createIDREFS());
 				
-				xml.open("ResourceProxy",[["id",IDREFS[i-1]]]);
-				xml.element("ResourceType","Metadata");
-				xml.element("ResourceRef",get(session.dom_element_prefix+session.sessions[i-1].id+"_session_name")+".cmdi");
+				xml.open("ResourceProxy", [["id", IDREFS[i]]]);
+				xml.element("ResourceType", "Metadata");
+				xml.element("ResourceRef", sessions[i].session.name + ".cmdi");
 				xml.close("ResourceProxy");
 			}
 			
@@ -506,7 +487,7 @@ imdi_environment.cmdi_generator = function(){
 	my.sessions = [];
 	
 	var xml = new XMLString();
-	my.corpus = create_cmdi_corpus();
+	my.corpus = create_cmdi_corpus(data.corpus, data.sessions);
     
 	for (var s = 0; s < session.sessions.length; s++){
 	

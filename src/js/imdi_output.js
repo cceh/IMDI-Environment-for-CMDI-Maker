@@ -177,8 +177,7 @@ imdi_environment.workflow[4] = (function (){
 			resources: resources.resources.getAll(),
 			sessions: session.sessions.getAll(),
 			actors: actors.actors.getAll()
-		}
-		
+		};
 		
 		var format = my.formats()[output_format_index];
 		
