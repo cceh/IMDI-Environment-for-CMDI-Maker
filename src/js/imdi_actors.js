@@ -444,7 +444,7 @@ imdi_environment.workflow[2] = (function(){
 		
 			var actors_json = JSON.stringify(my.actors.getState());
 			
-			APP.save_file(actors_json, "actors.json", APP.CONF.file_download_header);
+			APP.saveTextfile(actors_json, "actors.json", APP.CONF.file_download_header);
 			
 		}
 		
