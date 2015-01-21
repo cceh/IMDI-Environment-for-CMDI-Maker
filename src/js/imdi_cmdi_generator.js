@@ -58,13 +58,34 @@ imdi_environment.cmdi_generator = function(){
 		["CMDVersion","1.1"],["xsi:schemaLocation","http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/"+profile_id+"/xsd "]]);
 
 	};
+	
+	
+	var getTimezoneOffset = function(){
+	
+		function pad(number, length){
+			var str = "" + number
+			while (str.length < length) {
+			str = '0'+str
+			}
+			return str;
+		}
+
+		var offset = new Date().getTimezoneOffset()
+		offset = ((offset<0? '+':'-')+ // Note the reversed sign!
+			pad(parseInt(Math.abs(offset/60)), 2) +
+			":" +   //the colon is there because arbil does it too. normally, timezone offsets are like +0100 or -0600
+			pad(Math.abs(offset%60), 2));
+			
+		return offset;
+		
+	};
 
 
 	var create_cmdi_session = function(sessiond){
 		
 		xml.header();
 		insert_cmdi_header("session");
-		insert_header(get("metadata_creator"),today()+"+01:00",imdi_session_profile);
+		insert_header(get("metadata_creator"),today()+getTimezoneOffset(),imdi_session_profile);
 		
 		//in resources is nothing, as this is a session and no corpus. attached media files in a cmdi session are further down
 		xml.open("Resources");
@@ -437,7 +458,7 @@ imdi_environment.cmdi_generator = function(){
 
 		insert_cmdi_header("corpus");
 
-		insert_header(get("metadata_creator"), today() + "+01:00", imdi_corpus_profile);
+		insert_header(get("metadata_creator"), today() + getTimezoneOffset(), imdi_corpus_profile);
 
 		xml.open("Resources");
 
