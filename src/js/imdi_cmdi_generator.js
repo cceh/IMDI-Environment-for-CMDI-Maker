@@ -81,7 +81,7 @@ imdi_environment.cmdi_generator = function(data){
 	};
 
 
-	var create_cmdi_session = function(corpus, session){
+	var create_cmdi_session = function(content_languages, session){
 		
 		xml.header();
 		insert_cmdi_header("session");
@@ -101,7 +101,7 @@ imdi_environment.cmdi_generator = function(data){
 		that is why there needs to be an extra method for creating cmdi sessions
 		luckily, it is here:
 		*/
-		insert_cmdi_session_data(corpus, session);
+		insert_cmdi_session_data(content_languages, session);
 		
 		xml.close("Components");
 		xml.close("CMD");
@@ -120,7 +120,7 @@ imdi_environment.cmdi_generator = function(data){
 	};
 
 
-	var insert_cmdi_session_data = function(corpus, session){
+	var insert_cmdi_session_data = function(content_languages, session){
 		
 		xml.open("Session");
 		xml.element("Name", session.session_name);
@@ -203,7 +203,7 @@ imdi_environment.cmdi_generator = function(data){
 		xml.close("CommunicationContext");
 		
 		xml.open("Content_Languages");
-		insert_content_languages(corpus.content_languages);
+		insert_content_languages(content_languages);
 		xml.close("Content_Languages");
 		
 		
@@ -215,7 +215,7 @@ imdi_environment.cmdi_generator = function(data){
 		xml.open("Actors");
 		
 		xml.open("descriptions");
-			xml.element("Description", session.content.communication_context.actors.description);
+			xml.element("Description", session.actors.description);
 		xml.close("descriptions");
 		
 		for (var a = 0; a < session.actors.actors.length; a++){
@@ -230,17 +230,15 @@ imdi_environment.cmdi_generator = function(data){
 		var id;
 		
 		for (var r = 0; r < session.resources.resources.mediaFiles.length; r++){  
-		
-			id = session.resources.resources.mediaFiles[r].id;
-		
-			insert_cmdi_mediafile(get(session.dom_element_prefix+session_id+'_mediafile_'+id+"_name"), get(session.dom_element_prefix+session_id+'_mediafile_'+id+"_size"));
+	
+			insert_cmdi_mediafile(session.resources.resources.mediaFiles[r]);
+			
 		}
 		
 		for (r = 0; r < session.resources.resources.writtenResources.length; r++){  
 
-			id = session.resources.resources.writtenResources[r].id;	
-
-			insert_cmdi_written_resource(get(session.dom_element_prefix+session_id+'_mediafile_'+id+"_name"),get(session.dom_element_prefix+session_id+'_mediafile_'+id+"_size"));
+			insert_cmdi_written_resource(session.resources.resources.writtenResources[r]);
+			
 		}
 		
 		//more resource stuff
@@ -265,20 +263,20 @@ imdi_environment.cmdi_generator = function(data){
 	};
 	
 
-	var insert_cmdi_written_resource = function(link, size){
-
+	var insert_cmdi_written_resource = function(file){
+	
 		xml.open("WrittenResource");
 
-		xml.element("ResourceLink",link);
+		xml.element("ResourceLink", file.name);
 		xml.element("MediaResourceLink","");
 
 		xml.element("Date","Unspecified");
 		//no input yet, but should come soon
 		
-		xml.element("Type", resources.getFileType(link).type);
-		xml.element("SubType", resources.getFileType(link).type);
-		xml.element("Format", resources.getFileType(link).mimetype);
-		xml.element("Size",size);
+		xml.element("Type", resources.getFileType(file.name).type);
+		xml.element("SubType", resources.getFileType(file.name).type);
+		xml.element("Format", resources.getFileType(file.name).mimetype);
+		xml.element("Size", file.size);
 		
 		xml.open("Validation");
 		xml.element("Type","");
@@ -321,14 +319,14 @@ imdi_environment.cmdi_generator = function(data){
 	};
 
 
-	var insert_cmdi_mediafile = function(link,size){
+	var insert_cmdi_mediafile = function(file){
 
 		
 		xml.open("MediaFile");
-		xml.element("ResourceLink", link);
-		xml.element("Type", resources.getFileType(link).type);
-		xml.element("Format", resources.getFileType(link).mimetype);
-		xml.element("Size", size);
+		xml.element("ResourceLink", file.name);
+		xml.element("Type", resources.getFileType(file.name).type);
+		xml.element("Format", resources.getFileType(file.name).mimetype);
+		xml.element("Size", file.size);
 		
 		xml.element("Quality","Unspecified");
 		// no input yet
@@ -504,7 +502,7 @@ imdi_environment.cmdi_generator = function(data){
 	for (var s = 0; s < data.sessions.length; s++){
 	
 		xml = new XMLString();
-		my.sessions.push(create_cmdi_session(data.corpus, data.sessions[s]));
+		my.sessions.push(create_cmdi_session(data.content_languages, data.sessions[s]));
 		
 	}
 

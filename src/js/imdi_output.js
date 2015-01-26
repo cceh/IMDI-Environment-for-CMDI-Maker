@@ -168,12 +168,8 @@ imdi_environment.workflow[4] = (function (){
 		var output_format_index = dom.getSelectedRadioIndex("output_format");
 		
 		var data = {
-			corpus: {
-				name: get("corpus_name"),
-				title: get("corpus_title"),
-				description: get("corpus_description")
-			},
-			content_languages: [],   //TO DO!!!
+			corpus: corpus.getSaveData(),
+			content_languages: corpus.getSaveData().content_languages.list,
 			resources: resources.resources.getAll(),
 			sessions: session.sessions.getAll(),
 			actors: actors.actors.getAll()
