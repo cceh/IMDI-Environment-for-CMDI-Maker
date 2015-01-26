@@ -18,11 +18,8 @@ limitations under the License.
 imdi_environment.imdi_generator = function(data){
 	"use strict";
 
-	var corpus = data.corpus;
-	var resources = data.resources;
-	var actors = data.actors;
-	var sessions = data.sessions;
-	var parent = imdi_environment;
+	var resources = imdi_environment.workflow[1];
+	//var actors = data.actors;
 	
 	var already_warned_for_invalid_dates = false;
 	var already_warned_for_invalid_birth_dates = false;
@@ -57,7 +54,7 @@ imdi_environment.imdi_generator = function(data){
 	};
 	
 	
-	var createIMDISession = function (session, content_languages) {
+	var createIMDISession = function (session, actors, resources, content_languages) {
 	
 		xml.header();
 		create_imdi_header("SESSION",APP.CONF.originator,"1.0",today());
