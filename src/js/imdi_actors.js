@@ -252,7 +252,7 @@ imdi_environment.workflow[2] = (function(){
 	my.getSaveData = function(){
 	
 		my.saveActiveActor();
-		return my.actors.getState();;
+		return my.actors.getState();
 	
 	};
 	
@@ -297,14 +297,26 @@ imdi_environment.workflow[2] = (function(){
 	my.recall = function(data){
 	
 		//check if legacy data structure and convert
-		if (data.actors && Array.isArray(data.actors) == true){
-		
-			for (var s = 0; s < data.length; s++){
+		if (data.actors){
+			log("actor legacy data:");
+			log(data.actors);
+			my.actors.setState(data.actors, true);
 			
-				my.actors.add(data.actors[s]);
+			my.actors.forEach(function(ac){
 			
-			}
-		
+				ac.languages.actor_languages = ac.languages;
+				
+				forEach(ac.languages.actor_languages, function(ALO){
+				
+					ALO.name = ALO.LanguageObject[3];
+					ALO.iso_code = ALO.LanguageObject[0];
+					ALO.type = ALO.LanguageObject[2];
+					ALO.country_code = ALO.LanguageObject[1];				
+				
+				});
+			
+			});
+			
 		}
 		
 		else {			

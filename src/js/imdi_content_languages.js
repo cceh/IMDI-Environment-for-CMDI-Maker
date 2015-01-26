@@ -67,7 +67,7 @@ imdi_environment.workflow[0].content_languages = (function() {
 	
 	my.recall = function(data){
 	
-		my.content_languages.setState(data);
+		my.content_languages.setState(data, true);
 		refresh();
 		
 	};
@@ -83,7 +83,7 @@ imdi_environment.workflow[0].content_languages = (function() {
 	my.choose = function(LanguageObject){
 	
 		if (my.set(LanguageObject)){
-			APP.log("\"" + LanguageObject[3]+"\" " + my.l("languages", "is_new_global"));	
+			APP.log("\"" + LanguageObject[3] + "\" " + my.l("languages", "is_new_global"));	
 		}
 	
 	};

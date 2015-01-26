@@ -461,7 +461,7 @@ imdi_environment.corpus_form = function () {
 				name: "name",
 				comment: l("corpus_form_comments", "name"),
 				type: "text",
-				not_allowed_chars: " !\"§$%&/\\()=?^°`´'#*+~<>[]{}|²³,.;:"
+				allowed_chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_",
 			},
 			{
 				heading: "Title",

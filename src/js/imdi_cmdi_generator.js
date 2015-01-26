@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 
-imdi_environment.cmdi_generator = function(){
+imdi_environment.cmdi_generator = function(data){
 	"use strict";
 	
 	var parent = imdi_environment;
@@ -81,7 +81,7 @@ imdi_environment.cmdi_generator = function(){
 	};
 
 
-	var create_cmdi_session = function(sessiond){
+	var create_cmdi_session = function(corpus, session){
 		
 		xml.header();
 		insert_cmdi_header("session");
@@ -93,7 +93,6 @@ imdi_environment.cmdi_generator = function(){
 		xml.element("JournalFileProxyList", "");
 		xml.element("ResourceRelationList", "");
 		xml.close("Resources");
-		
 		xml.open("Components");
 		
 		/*
@@ -102,13 +101,10 @@ imdi_environment.cmdi_generator = function(){
 		that is why there needs to be an extra method for creating cmdi sessions
 		luckily, it is here:
 		*/
-		insert_cmdi_session_data(session);
+		insert_cmdi_session_data(corpus, session);
 		
 		xml.close("Components");
-		
 		xml.close("CMD");
-		
-		
 		
 	};
 
@@ -124,13 +120,13 @@ imdi_environment.cmdi_generator = function(){
 	};
 
 
-	var insert_cmdi_session_data = function(session){
+	var insert_cmdi_session_data = function(corpus, session){
 		
 		xml.open("Session");
 		xml.element("Name", session.session_name);
 		xml.element("Title", session.session_title);
 		
-		xml.element("Date", APP.forms.getDateStringByDateInput(session.session.date) || "Unspecified");
+		xml.element("Date", APP.forms.getDateStringByDateObject(session.session.date) || "Unspecified");
 		
 		// if a valid session date cannot be parsed from the form BUT there has been some input by the user
 		// AND the user has not been warned before about that, warn him or her
@@ -207,7 +203,7 @@ imdi_environment.cmdi_generator = function(){
 		xml.close("CommunicationContext");
 		
 		xml.open("Content_Languages");
-		insert_content_languages(session_id);
+		insert_content_languages(corpus.content_languages);
 		xml.close("Content_Languages");
 		
 		
@@ -223,7 +219,7 @@ imdi_environment.cmdi_generator = function(){
 		xml.close("descriptions");
 		
 		for (var a = 0; a < session.actors.actors.length; a++){
-			insert_cmdi_actor(session_id, session.actors.actors[a]);
+			insert_cmdi_actor(session.id, getObjectByID(actors, session.actors.actors[a]));
 		}
 		
 		xml.close("Actors");  
@@ -255,15 +251,13 @@ imdi_environment.cmdi_generator = function(){
 	};
 
 	
-	var insert_content_languages = function (session_id) {
+	var insert_content_languages = function (languages) {
 
-		var languages = corpus.content_languages.content_languages;
-	
-		for (var l=0;l<languages.length;l++){  //for all content languages // no session separate languages yet
+		for (var l = 0; l < languages.length; l++){  //for all content languages // no session separate languages yet
 	
 			xml.open("Content_Language");
-			xml.element("Id",APP.CONF.LanguageCodePrefix+languages[l][0]);
-			xml.element("Name",languages[l][3]);
+			xml.element("Id", APP.CONF.LanguageCodePrefix + languages[l].iso_code);
+			xml.element("Name", languages[l].name);
 			xml.close("Content_Language");
 	
 		}
@@ -373,11 +367,8 @@ imdi_environment.cmdi_generator = function(){
 	};
 
 
-	var insert_cmdi_actor = function(session_id, actor_id){
+	var insert_cmdi_actor = function(session_id, ac){
 
-		var i = actor.getIndexByID(actor_id);
-		var ac = actor.actors[i];
-		
 		xml.open("Actor");
 		xml.element("Role",ac.role);
 		xml.element("Name",ac.name);
@@ -463,10 +454,10 @@ imdi_environment.cmdi_generator = function(){
 		xml.open("Resources");
 
 		//Resource Proxy List contains other CMDI files, e.g. CMDI sessions, if this is a corpus
-		if (session.sessions.length > 0){
+		if (sessions.length > 0){
 			xml.open("ResourceProxyList");
 			
-			for (var i = 0; i < session.sessions.length; i++){  
+			for (var i = 0; i < sessions.length; i++){  
 			
 				IDREFS.push(createIDREFS());
 				
@@ -493,8 +484,8 @@ imdi_environment.cmdi_generator = function(){
 		xml.open("imdi-corpus",[["ref",IDREFS_string]]);
 		xml.open("Corpus");
 		
-		xml.element("Name",get("corpus_name"));
-		xml.element("Title",get("corpus_title"));
+		xml.element("Name", get("corpus_name"));
+		xml.element("Title", get("corpus_title"));
 		//seems like there is no field for description here!
 		
 		xml.close("Corpus");
@@ -510,10 +501,10 @@ imdi_environment.cmdi_generator = function(){
 	var xml = new XMLString();
 	my.corpus = create_cmdi_corpus(data.corpus, data.sessions);
     
-	for (var s = 0; s < session.sessions.length; s++){
+	for (var s = 0; s < data.sessions.length; s++){
 	
 		xml = new XMLString();
-		my.sessions.push(create_cmdi_session(session.sessions[s].id));
+		my.sessions.push(create_cmdi_session(data.corpus, data.sessions[s]));
 		
 	}
 

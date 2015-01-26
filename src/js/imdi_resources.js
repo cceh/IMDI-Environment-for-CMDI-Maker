@@ -167,10 +167,7 @@ imdi_environment.workflow[1] = (function(){
 	
 	my.recall = function(data){
 	
-	
-		//TO DO: check for legacy data objects and convert
-		my.resources.setState(data);
-		
+		my.resources.setState(data, true);
 		my.refresh();
 	
 	};
