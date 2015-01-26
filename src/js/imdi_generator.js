@@ -238,13 +238,13 @@ imdi_environment.imdi_generator = function(data){
 		xml.element("ResourceLink", link);
 		xml.element("MediaResourceLink","");
 		xml.element("Date","Unspecified"); //no input yet
-	    xml.element("Type", resources.getFileType(link).type,[["Link","http://www.mpi.nl/IMDI/Schema/WrittenResource-Type.xml"],["Type","OpenVocabulary"]]);
-		xml.element("SubType", resources.getFileType(link).type,[["Link","http://www.mpi.nl/IMDI/Schema/WrittenResource-SubType.xml"],["Type","OpenVocabularyList"]]);
-		xml.element("Format", resources.getFileType(link).mimetype,[["Link","http://www.mpi.nl/IMDI/Schema/WrittenResource-Format.xml"],["Type","OpenVocabulary"]]);
+	    xml.element("Type", resources.getFileType(link).type, [["Link","http://www.mpi.nl/IMDI/Schema/WrittenResource-Type.xml"], ["Type","OpenVocabulary"]]);
+		xml.element("SubType", resources.getFileType(link).type, [["Link","http://www.mpi.nl/IMDI/Schema/WrittenResource-SubType.xml"], ["Type","OpenVocabularyList"]]);
+		xml.element("Format", resources.getFileType(link).mimetype, [["Link","http://www.mpi.nl/IMDI/Schema/WrittenResource-Format.xml"], ["Type","OpenVocabulary"]]);
 		xml.element("Size", size);
 		xml.open("Validation");
 		xml.element("Type", "", [["Link","http://www.mpi.nl/IMDI/Schema/Validation-Type.xml"],["Type","ClosedVocabulary"]]);
-		xml.element("Methodology", "",[["Link","http://www.mpi.nl/IMDI/Schema/Validation-Methodology.xml"],["Type","ClosedVocabulary"]]);
+		xml.element("Methodology", "", [["Link","http://www.mpi.nl/IMDI/Schema/Validation-Methodology.xml"],["Type","ClosedVocabulary"]]);
 		xml.element("Level","Unspecified");
 		xml.element("Description", "", [["LanguageId", getMetadataLanguage()],["Link",""]]);
 		xml.close("Validation");

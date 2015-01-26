@@ -25,6 +25,9 @@ imdi_environment.cmdi_generator = function(data){
 
 	var imdi_corpus_profile = "clarin.eu:cr1:p_1274880881885";
 	var imdi_session_profile = "clarin.eu:cr1:p_1271859438204";
+	
+	var resources = parent.workflow[1];
+	var actor = parent.workflow[2];
 
 	var createIDREFS = function(){
 
@@ -81,7 +84,7 @@ imdi_environment.cmdi_generator = function(data){
 	};
 
 
-	var create_cmdi_session = function(content_languages, session){
+	var create_cmdi_session = function(content_languages, session, actors){
 		
 		xml.header();
 		insert_cmdi_header("session");
@@ -101,7 +104,7 @@ imdi_environment.cmdi_generator = function(data){
 		that is why there needs to be an extra method for creating cmdi sessions
 		luckily, it is here:
 		*/
-		insert_cmdi_session_data(content_languages, session);
+		insert_cmdi_session_data(content_languages, session, actors);
 		
 		xml.close("Components");
 		xml.close("CMD");
@@ -120,11 +123,11 @@ imdi_environment.cmdi_generator = function(data){
 	};
 
 
-	var insert_cmdi_session_data = function(content_languages, session){
+	var insert_cmdi_session_data = function(content_languages, session, actors){
 		
 		xml.open("Session");
-		xml.element("Name", session.session_name);
-		xml.element("Title", session.session_title);
+		xml.element("Name", session.session.name);
+		xml.element("Title", session.session.title);
 		
 		xml.element("Date", APP.forms.getDateStringByDateObject(session.session.date) || "Unspecified");
 		
@@ -183,7 +186,7 @@ imdi_environment.cmdi_generator = function(data){
 		
 		xml.open("CommunicationContext");
 		xml.element("Interactivity", session.content.communication_context.interactivity);
-		xml.element("PlanningType", session.content.communication_context.planning_type);
+		xml.element("PlanningType", session.content.communication_context.planningtype);
 		xml.element("Involvement", session.content.communication_context.involvement);	
 		xml.element("SocialContext", session.content.communication_context.socialcontext);
 		xml.element("EventStructure", session.content.communication_context.eventstructure);
@@ -254,8 +257,8 @@ imdi_environment.cmdi_generator = function(data){
 		for (var l = 0; l < languages.length; l++){  //for all content languages // no session separate languages yet
 	
 			xml.open("Content_Language");
-			xml.element("Id", APP.CONF.LanguageCodePrefix + languages[l].iso_code);
-			xml.element("Name", languages[l].name);
+			xml.element("Id", APP.CONF.LanguageCodePrefix + languages[l][0]);
+			xml.element("Name", languages[l][3]);
 			xml.close("Content_Language");
 	
 		}
@@ -497,12 +500,15 @@ imdi_environment.cmdi_generator = function(data){
 	my.sessions = [];
 	
 	var xml = new XMLString();
-	my.corpus = create_cmdi_corpus(data.corpus, data.sessions);
+	create_cmdi_corpus(data.corpus, data.sessions);
+	
+	my.corpus = xml.getString();
     
 	for (var s = 0; s < data.sessions.length; s++){
 	
 		xml = new XMLString();
-		my.sessions.push(create_cmdi_session(data.content_languages, data.sessions[s]));
+		create_cmdi_session(data.content_languages, data.sessions[s], data.actors);
+		my.sessions.push(xml.getString());
 		
 	}
 
