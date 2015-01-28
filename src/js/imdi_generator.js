@@ -34,10 +34,35 @@ imdi_environment.imdi_generator = function(data){
 		
 	}
 	
-	var create_imdi_corpus = function (corpus, sessions) {
+	
+	var getActorAge = function (sessionDate, actor_birthDate){
+	
+		sessionDate = dates.getDateStringByDateObject(sessionDate);
+		actor_birthDate = dates.getDateStringByDateObject(actor_birthDate);
+		
+		var age_calc_result = dates.calcAgeAtDate(sessionDate, actor_birthDate);
+		
+		if (typeof age_calc_result != "undefined" && age_calc_result !== 0){
+		
+			log("Actor's age successfully calculated");			
+			return age_calc_result;
+	
+		}
+		
+		else {
+		
+			log("Actor's age could not be calculated. result = " + age_calc_result);
+			return "Unspecified";
+		
+		}
+		
+	};
+	
+	
+	var createCorpus = function (corpus, sessions) {
     
 		xml.header();
-		create_imdi_header("CORPUS", APP.CONF.originator, "1.0", today());
+		create_imdi_header("CORPUS", APP.CONF.originator, "1.0", dates.today());
 		xml.open("Corpus");
         xml.element("Name", corpus.name);
 		xml.element("Title", corpus.title);   
@@ -54,21 +79,21 @@ imdi_environment.imdi_generator = function(data){
 	};
 	
 	
-	var createIMDISession = function (session, actors, resources, content_languages) {
+	var createSession = function (session, actors, resources, content_languages) {
 	
 		xml.header();
-		create_imdi_header("SESSION",APP.CONF.originator,"1.0",today());
+		create_imdi_header("SESSION",APP.CONF.originator,"1.0",dates.today());
 		xml.open("Session");
 		xml.element("Name", session.session.name);
 		xml.element("Title", session.session.title);
 
 
-		xml.element("Date", APP.forms.getDateStringByDateObject(session.session.date) || "Unspecified");
+		xml.element("Date", dates.getDateStringByDateObject(session.session.date) || "Unspecified");
 		
 		// if a valid session date cannot be parsed from the form BUT there has been some input by the user
 		// AND the user has not been warned before about that, warn him or her
 		if (
-			APP.forms.isUserDefinedDateInvalid(session.session.date)
+			dates.isUserDefinedDateInvalid(session.session.date)
 			&& (already_warned_for_invalid_dates == false)
 		){
 		
@@ -80,7 +105,6 @@ imdi_environment.imdi_generator = function(data){
 			
 			already_warned_for_invalid_dates = true;
 		}
-		
 		
 		xml.element("Description", session.session.description,[["LanguageId",getMetadataLanguage()],["Link",""]]);
 
@@ -116,8 +140,21 @@ imdi_environment.imdi_generator = function(data){
 		//Actors Description
 		xml.element("Description", session.actors.description, [["LanguageId", getMetadataLanguage()], ["Link", ""]]);
     
-		forEach(session.actors.actors, function(actor){
-			insertActor(actor);
+		forEach(session.actors.actors, function(actor_id){
+		
+			var ac = getObjectByID(actors, actor_id);
+			
+			if (ac.age === "" && g("radio_age_calc").on){
+				ac.age = getActorAge(session.session.date, ac.birth_date);
+			}
+			
+			//if radio age calc is off and ac.age is "", then replace it
+			if (ac.age === ""){
+				ac.age = "Unspecified";
+			}
+		
+			insertActor(ac);
+			
 		});
 
 		xml.close("Actors");
@@ -309,7 +346,9 @@ imdi_environment.imdi_generator = function(data){
 	}
 
 
-	var insertActor = function (actor, session_id) {
+	var insertActor = function (actor) {
+	
+		
 
 		xml.open("Actor");
 		xml.element("Role", actor.role, [["Link","http://www.mpi.nl/IMDI/Schema/Actor-Role.xml"],["Type","OpenVocabularyList"]]);
@@ -336,12 +375,12 @@ imdi_environment.imdi_generator = function(data){
 		xml.element("EthnicGroup", actor.ethnic_group);   
 	
 		//Age field
-		xml.element("Age", actor.getAge(session_id, actor_id));
+		xml.element("Age", actor.age);
 	
-		xml.element("BirthDate", APP.forms.getDateStringByDateObject(actor.birth_date) || "Unspecified");
+		xml.element("BirthDate", dates.getDateStringByDateObject(actor.birth_date) || "Unspecified");
 		
 		if (
-			APP.forms.isUserDefinedDateInvalid(actor.birth_date)
+			dates.isUserDefinedDateInvalid(actor.birth_date)
 			&& (already_warned_for_invalid_birth_dates == false)
 		){
 		
@@ -374,12 +413,12 @@ imdi_environment.imdi_generator = function(data){
 	my.sessions = [];
 
 	var xml = new XMLString();
-	create_imdi_corpus(data.corpus, data.sessions);
+	createCorpus(data.corpus, data.sessions);
 	my.corpus = xml.getString();
 	
 	forEach(data.sessions, function(session){   
 		xml = new XMLString();
-		createIMDISession(session, data.actors, data.resources, data.content_languages);
+		createSession(session, data.actors, data.resources, data.content_languages);
 		my.sessions.push(xml.getString());
 	});
 

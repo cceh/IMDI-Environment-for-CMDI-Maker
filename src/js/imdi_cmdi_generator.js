@@ -40,9 +40,33 @@ imdi_environment.cmdi_generator = function(data){
 		return "res_"+rString1+"_"+rString2+"_"+rString3+"_"+rString4+"_"+rString5;
 
 	};
+	
+	
+	var getActorAge = function (sessionDate, actor_birthDate){
+	
+		sessionDate = dates.getDateStringByDateObject(sessionDate);
+		actor_birthDate = dates.getDateStringByDateObject(actor_birthDate);
+		
+		var age_calc_result = dates.calcAgeAtDate(sessionDate, actor_birthDate);
+		
+		if (typeof age_calc_result != "undefined" && age_calc_result !== 0){
+		
+			log("Actor's age successfully calculated");			
+			return age_calc_result;
+	
+		}
+		
+		else {
+		
+			log("Actor's age could not be calculated. result = " + age_calc_result);
+			return "Unspecified";
+		
+		}
+		
+	};
 
 
-	var insert_cmdi_header = function(corpus_or_session){
+	var insertCMDIHeader = function(corpus_or_session){
 		var profile_id;
 		
 		if ((corpus_or_session === 0) || (corpus_or_session == "corpus")){
@@ -63,32 +87,11 @@ imdi_environment.cmdi_generator = function(data){
 	};
 	
 	
-	var getTimezoneOffset = function(){
-	
-		function pad(number, length){
-			var str = "" + number
-			while (str.length < length) {
-			str = '0'+str
-			}
-			return str;
-		}
-
-		var offset = new Date().getTimezoneOffset()
-		offset = ((offset<0? '+':'-')+ // Note the reversed sign!
-			pad(parseInt(Math.abs(offset/60)), 2) +
-			":" +   //the colon is there because arbil does it too. normally, timezone offsets are like +0100 or -0600
-			pad(Math.abs(offset%60), 2));
-			
-		return offset;
-		
-	};
-
-
 	var create_cmdi_session = function(content_languages, session, actors){
 		
 		xml.header();
-		insert_cmdi_header("session");
-		insert_header(get("metadata_creator"),today()+getTimezoneOffset(),imdi_session_profile);
+		insertCMDIHeader("session");
+		insertHeader(get("metadata_creator"), dates.today() + dates.getTimezoneOffsetInHours(),imdi_session_profile);
 		
 		//in resources is nothing, as this is a session and no corpus. attached media files in a cmdi session are further down
 		xml.open("Resources");
@@ -104,7 +107,7 @@ imdi_environment.cmdi_generator = function(data){
 		that is why there needs to be an extra method for creating cmdi sessions
 		luckily, it is here:
 		*/
-		insert_cmdi_session_data(content_languages, session, actors);
+		insertCMDISessionData(content_languages, session, actors);
 		
 		xml.close("Components");
 		xml.close("CMD");
@@ -112,7 +115,7 @@ imdi_environment.cmdi_generator = function(data){
 	};
 
 
-	var insert_header = function(MdCreator, MdCreationDate, MdProfile){
+	var insertHeader = function(MdCreator, MdCreationDate, MdProfile){
 		
 		xml.open("Header");
 		xml.element("MdCreator",MdCreator);
@@ -123,18 +126,18 @@ imdi_environment.cmdi_generator = function(data){
 	};
 
 
-	var insert_cmdi_session_data = function(content_languages, session, actors){
+	var insertCMDISessionData = function(content_languages, session, actors){
 		
 		xml.open("Session");
 		xml.element("Name", session.session.name);
 		xml.element("Title", session.session.title);
 		
-		xml.element("Date", APP.forms.getDateStringByDateObject(session.session.date) || "Unspecified");
+		xml.element("Date", dates.getDateStringByDateObject(session.session.date) || "Unspecified");
 		
 		// if a valid session date cannot be parsed from the form BUT there has been some input by the user
 		// AND the user has not been warned before about that, warn him or her
 		if (
-			APP.forms.isUserDefinedDateInvalid(session.session.date)
+			dates.isUserDefinedDateInvalid(session.session.date)
 			&& (already_warned_for_invalid_dates == false)
 		){
 		
@@ -206,7 +209,7 @@ imdi_environment.cmdi_generator = function(data){
 		xml.close("CommunicationContext");
 		
 		xml.open("Content_Languages");
-		insert_content_languages(content_languages);
+		insertContentLanguages(content_languages);
 		xml.close("Content_Languages");
 		
 		
@@ -221,9 +224,22 @@ imdi_environment.cmdi_generator = function(data){
 			xml.element("Description", session.actors.description);
 		xml.close("descriptions");
 		
-		for (var a = 0; a < session.actors.actors.length; a++){
-			insert_cmdi_actor(session.id, getObjectByID(actors, session.actors.actors[a]));
-		}
+		forEach(session.actors.actors, function(actor_id){
+		
+			var ac = getObjectByID(actors, actor_id);
+			
+			if (ac.age === "" && g("radio_age_calc").on){
+				ac.age = getActorAge(session.session.date, ac.birth_date);
+			}
+			
+			//if radio age calc is off and ac.age is "", then replace it
+			if (ac.age === ""){
+				ac.age = "Unspecified";
+			}
+		
+			insertActor(ac);
+			
+		});
 		
 		xml.close("Actors");  
 		xml.close("MDGroup");
@@ -234,13 +250,13 @@ imdi_environment.cmdi_generator = function(data){
 		
 		for (var r = 0; r < session.resources.resources.mediaFiles.length; r++){  
 	
-			insert_cmdi_mediafile(session.resources.resources.mediaFiles[r]);
+			insertMediafile(session.resources.resources.mediaFiles[r]);
 			
 		}
 		
 		for (r = 0; r < session.resources.resources.writtenResources.length; r++){  
 
-			insert_cmdi_written_resource(session.resources.resources.writtenResources[r]);
+			insertWrittenResource(session.resources.resources.writtenResources[r]);
 			
 		}
 		
@@ -252,7 +268,7 @@ imdi_environment.cmdi_generator = function(data){
 	};
 
 	
-	var insert_content_languages = function (languages) {
+	var insertContentLanguages = function (languages) {
 
 		for (var l = 0; l < languages.length; l++){  //for all content languages // no session separate languages yet
 	
@@ -266,7 +282,7 @@ imdi_environment.cmdi_generator = function(data){
 	};
 	
 
-	var insert_cmdi_written_resource = function(file){
+	var insertWrittenResource = function(file){
 	
 		xml.open("WrittenResource");
 
@@ -322,7 +338,7 @@ imdi_environment.cmdi_generator = function(data){
 	};
 
 
-	var insert_cmdi_mediafile = function(file){
+	var insertMediafile = function(file){
 
 		
 		xml.open("MediaFile");
@@ -368,7 +384,7 @@ imdi_environment.cmdi_generator = function(data){
 	};
 
 
-	var insert_cmdi_actor = function(session_id, ac){
+	var insertActor = function(ac){
 
 		xml.open("Actor");
 		xml.element("Role",ac.role);
@@ -378,17 +394,12 @@ imdi_environment.cmdi_generator = function(data){
 		xml.element("FamilySocialRole",ac.family_social_role);
 		xml.element("EthnicGroup",ac.ethnic_group);   
 		
-		//Age field
-		xml.open("Age");
-		actor.getAge(session_id, actor_id);
-		xml.close("Age");	
-		//End of age field
-		
-		xml.element("BirthDate", APP.forms.getDateStringByDateObject(ac.birth_date) || "Unspecified");
+		xml.element("Age", ac.age);
+		xml.element("BirthDate", dates.getDateStringByDateObject(ac.birth_date) || "Unspecified");
 		
 
 		if (
-			APP.forms.isUserDefinedDateInvalid(ac.birth_date)
+			dates.isUserDefinedDateInvalid(ac.birth_date)
 			&& (already_warned_for_invalid_birth_dates == false)
 		){
 
@@ -442,15 +453,15 @@ imdi_environment.cmdi_generator = function(data){
 	};
 
 
-	var create_cmdi_corpus = function(corpus, sessions){
+	var createCorpus = function(corpus, sessions){
 		
 		var IDREFS = [];
 		
 		xml.header();
 
-		insert_cmdi_header("corpus");
+		insertCMDIHeader("corpus");
 
-		insert_header(get("metadata_creator"), today() + getTimezoneOffset(), imdi_corpus_profile);
+		insertHeader(get("metadata_creator"), dates.today() + dates.getTimezoneOffsetInHours(), imdi_corpus_profile);
 
 		xml.open("Resources");
 
@@ -500,7 +511,7 @@ imdi_environment.cmdi_generator = function(data){
 	my.sessions = [];
 	
 	var xml = new XMLString();
-	create_cmdi_corpus(data.corpus, data.sessions);
+	createCorpus(data.corpus, data.sessions);
 	
 	my.corpus = xml.getString();
     

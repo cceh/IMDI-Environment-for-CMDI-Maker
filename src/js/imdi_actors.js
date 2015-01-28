@@ -304,8 +304,14 @@ imdi_environment.workflow[2] = (function(){
 			
 			my.actors.forEach(function(ac){
 			
-				ac.languages.actor_languages = ac.languages;
+				if (Array.isArray(ac.languages)){
+					var langs = ac.languages;
+					
+					ac.languages = {};
+					ac.languages.actor_languages = langs;
+				}
 				
+			
 				forEach(ac.languages.actor_languages, function(ALO){
 				
 					ALO.name = ALO.LanguageObject[3];
@@ -659,50 +665,6 @@ imdi_environment.workflow[2] = (function(){
 	};
 	
 	
-	my.getAge = function (session_id, actor_id){
-
-		var ac = my.actors.getByID(actor_id);
-		
-		if (my.actors[i].age === ""){   //at first, check, if actor's age hasn't been specified yet
-		
-			if (g("radio_age_calc").on){  //then, check if auto calculate feature in settings is activated
-				
-				var birthDate = ac.birth_date.year + "-" + ac.birth_date.month + "-" + ac.birth_date.day;
-				var sessionDate = get(session.dom_element_prefix + session_id +"_session_date_year") + "-" +
-				get(session.dom_element_prefix + session_id + "_session_date_month") + "-" + get(session.dom_element_prefix + session_id + "_session_date_day"); 
-				var age_calc_result = calcAgeAtDate(sessionDate,birthDate);
-				
-				if (age_calc_result !== 0){
-				
-					console.log("Actor's age successfully calculated");			
-					return age_calc_result;
-			
-				}
-				
-				else {  //if age calc = 0, age could not be calculated
-				
-					return "Unspecified";
-				
-				}
-				
-			}
-			
-			else {	//if feature is activated, but age has not been specified
-			
-				return "Unspecified";
-			
-			}
-		}
-		
-		else { //if actor's age has been specified
-		
-			return ac.age;
-		
-		}
-
-	};
-	
-
 	var renderActorListEntry = function(actor, i){
 	
 		var div = dom.make('div', my.element_id_prefix + "list_entry_" + i, my.element_id_prefix + "list_entry", g(my.element_id_prefix + 'list'));
