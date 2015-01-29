@@ -84,6 +84,8 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 		//check if legacy data array
 		if (Array.isArray(data) == true){
 		
+			my.sessions.reset();
+		
 			for (var s = 0; s < data.length; s++){
 			
 				my.sessions.add(data[s]);

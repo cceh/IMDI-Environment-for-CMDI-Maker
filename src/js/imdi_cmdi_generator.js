@@ -297,19 +297,19 @@ imdi_environment.cmdi_generator = function(data){
 		xml.element("Format", resources.getFileType(file.name).mimetype);
 		xml.element("Size", file.size);
 		
-		xml.open("Validation");
-		xml.element("Type","");
-		xml.element("Methodology","");
-		xml.element("Level","Unspecified");
-		xml.element("Description","");
-		xml.close("Validation");
-
 		xml.element("Derivation","");
 
 		xml.element("CharacterEncoding","");
 		xml.element("ContentEncoding","");
 		xml.element("LanguageId","");
 		xml.element("Anonymized","Unspecified");
+		
+		xml.open("Validation");
+			xml.element("Type","");
+			xml.element("Methodology","");
+			xml.element("Level","Unspecified");
+			xml.element("Description","");
+		xml.close("Validation");
 
 		xml.open("Access");
 
