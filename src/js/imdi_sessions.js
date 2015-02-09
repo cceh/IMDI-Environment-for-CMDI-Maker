@@ -50,7 +50,12 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 			addActor: my.addActor,
 			addResource: my.addResource,
 			removeActor: my.removeActor,
-			removeResource: my.removeResource
+			removeResource: my.removeResource,
+			setResourceIDCounterBiggerThan: function(number){
+				if (my.resource_id_counter <= number){
+					my.resource_id_counter = number + 1;
+				}
+			}
 			
 		};
 		
@@ -378,8 +383,8 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 			my.sessions.getByID(session_id).resources.resources.mediaFiles.push({
 				name: res.name,
 				size: res.size,
-				id: my.resource_id_counter,
-				resource_id: resource_id
+				id: resource_id,
+				//resource_id: resource_id
 			});
 
 		}
@@ -391,8 +396,8 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 			my.sessions.getByID(session_id).resources.resources.writtenResources.push({
 				name: res.name,
 				size: res.size,
-				id: my.resource_id_counter,
-				resource_id: resource_id
+				id: resource_id,
+				//resource_id: resource_id
 			});
 			
 		}
@@ -412,8 +417,8 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 			my.sessions.getByID(session_id).resources.resources.writtenResources.push({
 				name: res.name,
 				size: res.size,
-				id: my.resource_id_counter,
-				resource_id: resource_id
+				id: resource_id,
+				//resource_id: resource_id
 			});
 			
 		}
@@ -439,10 +444,8 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 		
 			var name = strings.removeEndingFromFilename(res.name);
 			
-			g(my.dom_element_prefix + session_id + "_session_name").value = name;
-			
-			my.GUI.refreshSessionHeading(session_id);
-		
+			my.sessions.getByID(session_id).session.name = name;
+
 			APP.log(l("session", "session_name_taken_from_eaf"));
 		
 		}
@@ -450,15 +453,13 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 		
 		//Check, if there is a date string in the form of YYYY-MM-DD in the filename of an eaf file. If so, adopt it for the session date
 		//only, if session date is still YYYY
-		if ((strings.getFileTypeFromFilename(filename) == "eaf") && (get(my.dom_element_prefix+session_id+"_session_date_year") == "YYYY")){
+		if ((strings.getFileTypeFromFilename(filename) == "eaf") && (get(my.dom_element_prefix + session_id + "_session_date_year") == "YYYY")){
 			
-			var date = parseDate(res.name);
+			var date = dates.parseDate(res.name);
 			
 			if (date !== null){
 			
-				g(my.dom_element_prefix+session_id+"_session_date_year").value = date.year;
-				g(my.dom_element_prefix+session_id+"_session_date_month").value = date.month;
-				g(my.dom_element_prefix+session_id+"_session_date_day").value = date.day;
+				my.sessions.getByID(session_id).session.date = date;
 				
 				APP.log(l("session", "session_date_extracted_from_eaf_file_name") +
 				": " + date.year + "-" + date.month + "-" + date.day);
@@ -468,11 +469,11 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 		
 		}
 		
-		my.GUI.renderResource(resource_id, session_id, resource_type, filename, filesize);
+		refresh();
 
 		my.resource_id_counter += 1;
 		
-		return my.resource_id_counter - 1;
+		return resource_id;
 		
 	};
 

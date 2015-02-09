@@ -196,9 +196,8 @@ imdi_environment.workflow[3].GUI = (function() {
 			
 			forEach(session_object.resources.resources.writtenResources, function(file){
 			
-				file.id = my.resource_id_counter;
-				my.renderResource(my.resource_id_counter, session_id, "wr", file.name, file.size);
-				my.resource_id_counter += 1;
+				my.renderResource(file.id, session_id, "wr", file.name, file.size);
+				actions.setResourceIDCounterBiggerThan(file.id);
 		
 			});
 		
@@ -208,9 +207,8 @@ imdi_environment.workflow[3].GUI = (function() {
 			
 			forEach(session_object.resources.resources.mediaFiles, function(file){
 			
-				file.id = my.resource_id_counter;
 				my.renderResource(file.id, session_id, "mf", file.name, file.size);
-				my.resource_id_counter += 1;
+				actions.setResourceIDCounterBiggerThan(file.id);
 				
 			});
 		
