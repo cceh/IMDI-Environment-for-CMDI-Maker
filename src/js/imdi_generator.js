@@ -368,8 +368,8 @@ imdi_environment.imdi_generator = function(data){
 		forEach(actor.languages.actor_languages, function(lang){
 	
 			xml.open("Language");
-			xml.element("Id", APP.CONF.LanguageCodePrefix + lang.LanguageObject[0]);
-			xml.element("Name", lang.LanguageObject[3],[["Link","http://www.mpi.nl/IMDI/Schema/MPI-Languages.xml"],["Type","OpenVocabulary"]]);
+			xml.element("Id", APP.CONF.LanguageCodePrefix + lang.iso_code);
+			xml.element("Name", lang.name,[["Link","http://www.mpi.nl/IMDI/Schema/MPI-Languages.xml"],["Type","OpenVocabulary"]]);
 			xml.element("MotherTongue",(lang.MotherTongue) ? "true" : "false",[["Link","http://www.mpi.nl/IMDI/Schema/Boolean.xml"],["Type","ClosedVocabulary"]]);
 			xml.element("PrimaryLanguage",(lang.PrimaryLanguage) ? "true" : "false",[["Link","http://www.mpi.nl/IMDI/Schema/Boolean.xml"],["Type","ClosedVocabulary"]]);		
 			xml.element("Description","",[["LanguageId", getMetadataLanguage()],["Link",""]]);

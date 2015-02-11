@@ -436,8 +436,8 @@ imdi_environment.cmdi_generator = function(data){
 		for (var l=0; l<ac.languages.length; l++){
 		
 			xml.open("Actor_Language");
-			xml.element("Id",APP.CONF.LanguageCodePrefix+ac.languages[l].LanguageObject[0]);
-			xml.element("Name",ac.languages[l].LanguageObject[3]);
+			xml.element("Id",APP.CONF.LanguageCodePrefix+ac.languages[l].iso_code);
+			xml.element("Name",ac.languages[l].name);
 			
 			xml.element("MotherTongue",(ac.languages[l].MotherTongue) ? "true" : "false");
 			xml.element("PrimaryLanguage",(ac.languages[l].PrimaryLanguage) ? "true" : "false");		
