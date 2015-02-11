@@ -285,22 +285,22 @@ imdi_environment.session_form = function () {
 			{
 				name: "date",
 				label: "Date",
-				fields: ["session_date_year","session_date_month","session_date_day"]
+				fields: ["session_date"]
 			},
 			{
 				name: "location",
 				label: "Location",
-				fields: ["session_location_continent","session_location_country","session_location_region","session_location_address"]
+				fields: ["session_location"]
 			},
 			{
 				name: "project",
 				label: "Project",
-				fields: ["project_name","project_title","project_id","project_description","project_contact_name","project_contact_address","project_contact_email","project_contact_organisation"]
+				fields: ["project"]
 			},
 			{
 				name: "content",
 				label: "Content",
-				fields: ["content_genre","content_subgenre","content_task","content_description","content_communication_context_eventstructure","content_communication_context_planningtype","content_communication_context_interactivity","content_communication_context_socialcontext","content_communication_context_involvement"]
+				fields: ["content"]
 			},
 			{
 				name: "actors",

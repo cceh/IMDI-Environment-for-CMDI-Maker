@@ -152,6 +152,14 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 				sub_div: "copy_sessions_select",
 				onclick: function() {
 					
+					if (my.sessions.length < 2){
+		
+						APP.log(l("session", "at_least_2_sessions_to_assign_metadata"), "error");
+						return;
+			
+					}
+					
+					
 					APP.confirm(l("really_overwrite_data"), function (e) {
 						if (e) {
 							// user clicked "ok"
@@ -506,20 +514,13 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 	
 		var session_form_template = session_form;
 
-		if (my.sessions.length < 2){
+		forEach(session_form_template.fields_to_copy, function(fields_object){
 		
-			APP.log(l("session", "at_least_2_sessions_to_assign_metadata"), "error");
-			return;
+			if (g(APP.CONF.copy_checkbox_element_prefix + fields_object.name).checked){  //if checkbox is checked
 			
-		}
-		
-		for (var i = 0; i < session_form_template.fields_to_copy.length; i++){
-		
-			if (g(APP.CONF.copy_checkbox_element_prefix+session_form_template.fields_to_copy[i].name).checked){  //if checkbox is checked
-			
-				if (session_form_template.fields_to_copy[i].name == "actors"){  //special case: actors!
+				if (fields_object.name == "actors"){  //special case: actors!
 				
-					for (var s = 1; s < my.sessions.length; s++){
+					for (var s = 1; s < my.sessions.length; s++){   //for all sessions beginning with the 2nd
 						my.removeAllActors(my.sessions.idOf(s));
 			
 						// copy actors from session 1 to session session
@@ -531,34 +532,53 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 				
 				}
 			
-				my.copyFieldsToAllSessions(session_form_template.fields_to_copy[i].fields);
+				my.copyFieldsToAllSessions(fields_object.fields);
 				
 			}
 		
-		}
+		});
+		
+		refresh();
 
 		APP.log(l("session", "session_1_metadata_assigned_to_all_sessions"));
 
 	};
 
 
-	my.copyFieldsToAllSessions = function(fields_to_copy){
+	my.copyFieldsToAllSessions = function(fields){
 	//fields_to_copy is an array
 	//it is indeed html conform to get textarea.value
 		
 		for (var s = 1; s < my.sessions.length; s++){   //important to not include the first session in this loop
 		
-			forEach(fields_to_copy, function(field_to_copy){
-				APP.GUI.copyField(
-					my.dom_element_prefix + my.sessions.idOf(s) + "_" + field_to_copy,
-					my.dom_element_prefix + my.sessions.idOf(0) + "_" + field_to_copy
-				);
+			forEach(fields, function(field){
+				if (field == "session_date"){
+					my.sessions.get(s).session.date = cloneObject(my.sessions.get(0).session.date);
+				}
+				
+				if (field == "session_location"){
+					my.sessions.get(s).session.location = cloneObject(my.sessions.get(0).session.location);
+				}
+				
+				if (field == "content"){
+					my.sessions.get(s).content = cloneObject(my.sessions.get(0).content);
+				}
+				
+				if (field == "project"){
+					my.sessions.get(s).project = cloneObject(my.sessions.get(0).project);
+				}
+				
+				if (field == "actors_description"){
+					my.sessions.get(s).actors.description = my.sessions.get(0).actors.description;
+				}
+				
 			});
 		
 		}
 		
 	};
 
+	
 	my.removeAllActors = function(session_id){
 	//Remove all actors from respective session
 		
