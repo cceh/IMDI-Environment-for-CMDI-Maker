@@ -350,7 +350,7 @@ imdi_environment.cmdi_generator = function(data){
 		xml.element("Quality","Unspecified");
 		// no input yet
 		
-		xml.tag("RecordingConditions", "");
+		xml.element("RecordingConditions", "");
 		
 		xml.open("TimePosition");
 		
