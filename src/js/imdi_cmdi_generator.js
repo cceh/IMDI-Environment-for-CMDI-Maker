@@ -444,7 +444,7 @@ imdi_environment.cmdi_generator = function(data){
 
 			xml.close("Actor_Language");
 		
-		}
+		});
 
 		xml.close("Actor_Languages");
 		

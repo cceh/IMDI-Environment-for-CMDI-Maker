@@ -448,7 +448,7 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 		
 		
 		//Rename the session if an EAF file is added for the first time and session has no name yet
-		if ((strings.getFileTypeFromFilename(filename) == "eaf") && (get(my.dom_element_prefix + session_id + "_session_name") === "")){
+		if ((strings.getFileTypeFromFilename(filename) == "eaf") && (my.sessions.getByID(session_id).session.name === "")){
 		
 			var name = strings.removeEndingFromFilename(res.name);
 			
@@ -461,7 +461,7 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 		
 		//Check, if there is a date string in the form of YYYY-MM-DD in the filename of an eaf file. If so, adopt it for the session date
 		//only, if session date is still YYYY
-		if ((strings.getFileTypeFromFilename(filename) == "eaf") && (get(my.dom_element_prefix + session_id + "_session_date_year") == "YYYY")){
+		if ((strings.getFileTypeFromFilename(filename) == "eaf") && (my.sessions.getByID(session_id).session.date.year == "YYYY")){
 			
 			var date = dates.parseDate(res.name);
 			
