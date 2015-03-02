@@ -15,7 +15,7 @@ limitations under the License.
 */
 
 
-imdi_environment.cmdi_generator = function(data){
+imdi_environment.cmdi_generator = function(data, l){
 	"use strict";
 	
 	var parent = imdi_environment;
@@ -142,9 +142,9 @@ imdi_environment.cmdi_generator = function(data){
 		){
 		
 			APP.alert(
-				parent.l("warning") +
-				parent.l("output", "invalid_date_entered_in_session") + "<br>" +
-				parent.l("output", "correct_or_ignore_warning")
+				l("warning") +
+				l("output", "invalid_date_entered_in_session") + "<br>" +
+				l("output", "correct_or_ignore_warning")
 			);
 			
 			already_warned_for_invalid_dates = true;
@@ -404,9 +404,9 @@ imdi_environment.cmdi_generator = function(data){
 		){
 
 			APP.alert(
-				parent.l("warning") +
-				parent.l("output", "invalid_birth_date_entered") + "<br>" +
-				parent.l("output", "correct_or_ignore_warning")
+				l("warning") +
+				l("output", "invalid_birth_date_entered") + "<br>" +
+				l("output", "correct_or_ignore_warning")
 			);
 			
 			already_warned_for_invalid_birth_dates = true;

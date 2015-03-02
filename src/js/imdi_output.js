@@ -178,7 +178,7 @@ imdi_environment.workflow[4] = (function (){
 		var format = my.formats()[output_format_index];
 		
 		// initiate object for imdi_structure class
-		var xml_strings = new format.generator_object(data);
+		var xml_strings = new format.generator_object(data, l);
 		var output_format = format.output_name;
 		var file_ending = format.file_ending;
 		

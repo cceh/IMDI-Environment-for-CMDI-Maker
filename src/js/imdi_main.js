@@ -22,7 +22,7 @@ var imdi_environment = (function(){
 	my.name = "imdi";
 	my.id = "imdi";
 	my.title = "IMDI";
-	my.version = "2.4";
+	my.version = "2.5";
 	
 	my.workflow = [];
 	my.languages = [];
