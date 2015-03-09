@@ -702,3 +702,75 @@ imdi_environment.languages[2] = {
 	}
 	
 };
+
+
+
+imdi_environment.languages[3] = {
+
+	id: "russian",
+	name: "Русский язык",
+	
+	terms: {
+		"workflow": {
+			"corpus": "Корпус",
+			"resources": "Ресурсы",
+			"actors": "Участники",
+			"session": "Сессии",
+			"xml_output": "Готовый XML"
+		},
+		"settings": {
+			"calculate_actors_age": "Вычислять возраст участников",
+			"calculate_actors_age_description": "Когда эта опция включена, CMDI Maker проверяет, можно ли вычислить возраст участника (если он ещё не указан) по дате рождения и дате сессии.<br>Если возраст вычислить можно, он появится в выходном файле.<br>(Возраст = Дата сессии - Дата рождения участника)",
+			"output_format": "Выходной формат",
+			"imdi": "IMDI",
+			"cmdi_with_imdi_profile": "CMDI с профилем IMDI",
+			"export_actors_as_json": "Экспортировать участников в JSON",
+			"import_actors_from_json_or_imdi": "Импортировать участников из JSON или IMDI",
+			"import_actors_description": "Пожалуйста, импортируйте только файлы в кодировке UTF-8!",
+			"delete_actors_database": "Удалить участников",
+			"delete_actors_database_description": "CMDI Maker сохраняет всех участников в базе данных браузера, так что они не пропадут, даже если закрыть окно браузера."
+		},
+		"main": {
+			"reset_form": "Очистить форму",
+			"yes_delete_form": "Да, очистить форму",
+			"no": "Нет",
+			"really_reset_form": "Точно?<br>Вы хотите очистить форму, удалить корпус и все сессии?",
+			"form_reset": "Очистить форму",
+			"search": "Поиск",
+			"ok": "ОК",
+			"function_currently_unavailable": "Функция сейчас недоступна!"
+		},
+		"languages": {
+			"set_global_languages_of_content": "Установить общие языки для содержимого",
+			"language_search": "Поиск языков",
+			"result": "результат",
+			"results": "результата (-ов)",
+			"language_name": "Название языка",
+			"is_new_global": "установлен как общий язык содержимого",
+			"iso_code": "Код ISO",
+			"not_found_in_db": "в базе данных не обнаружен",
+			"specify_search_request_at_least_3_chars": "Пожалуйста, уточните запрос.\nНаберите по крайней мере 3 буквы.",
+			"primary_language": "Основной язык",
+			"mother_tongue": "Родной язык",
+			"current_content_languages": "Текущие языки содержимого",
+			"content_language_removed__before_lang": "Язык содержания \"",
+			"content_language_removed__after_lang": "\" исключён."
+		},
+		"resources": {
+			"compatibility_warnings": {}
+		},
+		"actors": {},
+		"session": {},
+		"output": {},
+		"session_form_comments": {
+			"location": {},
+			"project": {},
+			"content": {
+				"communication_context": {}
+			},
+			"actors": {}
+		},
+		"corpus_form_comments": {}
+	}
+
+};
