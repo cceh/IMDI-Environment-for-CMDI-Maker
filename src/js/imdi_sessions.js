@@ -160,7 +160,7 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 					}
 					
 					
-					APP.confirm(l("really_overwrite_data"), function (e) {
+					APP.confirm(l("main", "really_overwrite_data"), function (e) {
 						if (e) {
 							// user clicked "ok"
 						}
@@ -170,7 +170,7 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 							my.assignSession1Metadata();
 							
 						}
-					}, l("main", "no"), l("yes_overwrite_data"));
+					}, l("main", "no"), l("main", "yes_overwrite_data"));
 				
 				}
 			},
