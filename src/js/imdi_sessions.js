@@ -170,7 +170,7 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 							my.assignSession1Metadata();
 							
 						}
-					}, l("no"), l("yes_overwrite_data"));
+					}, l("main", "no"), l("yes_overwrite_data"));
 				
 				}
 			},
@@ -285,7 +285,7 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 
 				APP.log(l("session", "session_deleted"));
 			}
-		}, l("no"), l("session", "yes_delete_session"));
+		}, l("main", "no"), l("session", "yes_delete_session"));
 
 	};
 
