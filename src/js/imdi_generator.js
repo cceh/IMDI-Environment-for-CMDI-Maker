@@ -252,11 +252,7 @@ imdi_environment.imdi_generator = function(data, l){
 	
 	var create_imdi_header = function (imdi_type, originator, version, date) {
     
-		//The link Arbil refers to, returns 404
-		var arbil_schema_location = "http://www.mpi.nl/IMDI/Schema/IMDI ./IMDI_3.0.xsd";
-		
-		//The actual XSD is here:
-		var actual_schema_location = "http://www.mpi.nl/IMDI/schemas/xsd/IMDI_3.0.xsd";
+		var schema_location = "http://www.mpi.nl/IMDI/Schema/IMDI ./IMDI_3.0.xsd";
 	
 		return xml.open("METATRANSCRIPT", [
 			["xmlns", "http://www.mpi.nl/IMDI/Schema/IMDI"],
@@ -266,7 +262,7 @@ imdi_environment.imdi_generator = function(data, l){
 			["Originator", originator],
 			["Type", imdi_type],
 			["Version", version],
-			["xsi:schemaLocation", actual_schema_location]
+			["xsi:schemaLocation", schema_location]
 		]);
 
 	};
