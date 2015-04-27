@@ -251,8 +251,10 @@ imdi_environment.imdi_generator = function(data, l){
 	
 	
 	var create_imdi_header = function (imdi_type, originator, version, date) {
-    
-		var schema_location = "http://www.mpi.nl/IMDI/Schema/IMDI ./IMDI_3.0.xsd";
+
+		//This schemaLocation is the most up-to-date one we found, v3.0.16
+		//there is also a 3.0.15 available on "http://www.mpi.nl/IMDI/schemas/xsd/IMDI_3.0.xsd" (checked 27.04.2015). this should not be used
+		var schema_location = "http://www.mpi.nl/IMDI/Schema/IMDI http://www.mpi.nl/IMDI/Schema/IMDI_3.0.xsd";
 	
 		return xml.open("METATRANSCRIPT", [
 			["xmlns", "http://www.mpi.nl/IMDI/Schema/IMDI"],
