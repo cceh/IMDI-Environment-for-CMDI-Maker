@@ -111,6 +111,7 @@ imdi_environment.workflow[4] = (function (){
 		
 		
 		//if not all sessions are properly named, return
+		//here, the hyphens aren't filtered
 		if (!session.areAllSessionsProperlyNamed()){
 			
 			APP.view(session);

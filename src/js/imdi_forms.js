@@ -34,7 +34,7 @@ imdi_environment.session_form = function () {
 						name: "name",
 						type: "text",
 						comment: l("session_form_comments", "name"),
-						allowed_chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_",
+						allowed_chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-",
 						replace_accent_bearing_letters_with_asci_substitute: true
 					},    
 					{
@@ -461,7 +461,7 @@ imdi_environment.corpus_form = function () {
 				name: "name",
 				comment: l("corpus_form_comments", "name"),
 				type: "text",
-				allowed_chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_",
+				allowed_chars: "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789_-",
 			},
 			{
 				heading: "Title",

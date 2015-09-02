@@ -49,6 +49,24 @@ imdi_environment.workflow[0] = (function(){
 		dom.make("h1", "", "", div, "Corpus");
 		
 		APP.forms.make(div, corpus_form_template, my.form_id_prefix, my.form_id_prefix);
+		
+		var name_input_element = g(my.form_id_prefix + "name");
+		
+
+		name_input_element.addEventListener("input", function(){
+			
+			if (!(g("preserve_hyphens").on) && name_input_element.value.indexOf("-") != -1){
+			
+				APP.log("Hyphens are not allowed in the corpus name!", "error");
+				
+				name_input_element.value = strings.removeCharactersFromString(name_input_element.value, "-");
+				
+				return false;
+				
+			}
+			
+		});
+		
 
 		my.content_languages.init(view);
 		

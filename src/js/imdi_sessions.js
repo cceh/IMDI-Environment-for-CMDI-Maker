@@ -618,7 +618,7 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 		
 			return false;
 		
-		}	
+		}
 
 		for (var i = 0; i < my.sessions.length; i++){
 		

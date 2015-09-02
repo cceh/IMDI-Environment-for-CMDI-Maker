@@ -184,9 +184,27 @@ imdi_environment.workflow[3].GUI = (function() {
 		//create the form
 		APP.forms.make(form.content, session_form, dom_prefix + "_", my.dom_element_prefix, session_object, my.makeSpecialFormInput);
 		
-		g(dom_prefix + "_session_name").addEventListener("blur", function(){
-			my.refreshSessionHeading(session_object);
+		var name_input_element = g(dom_prefix + "_session_name");
+		
+		name_input_element.addEventListener("blur", function(){
+			
+			my.refreshSessionHeading(session_object);	
+			
 		});
+		
+		name_input_element.addEventListener("input", function(){
+			
+			if (!(g("preserve_hyphens").on) && name_input_element.value.indexOf("-") != -1){
+			
+				APP.log("Hyphens are not allowed in the session name!", "error");
+				
+				name_input_element.value = strings.removeCharactersFromString(name_input_element.value, "-");
+				
+				return false;
+				
+			}
+			
+		});		
 		
 		forEach(session_object.actors.actors, function(actor_id){
 			my.renderActor(session_id, actor_id);

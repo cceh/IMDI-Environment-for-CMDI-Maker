@@ -98,6 +98,12 @@ var imdi_environment = (function(){
 				type: "link"
 			},
 			{
+				title: my.l("settings","preserve_hyphens_in_session_and_filenames"),
+				description: my.l("settings","preserve_hyphens_description"),
+				id: "preserve_hyphens",
+				type: "toggle"
+			},			
+			{
 				title: my.l("settings","import_actors_from_json_or_imdi"),
 				description: my.l("settings","import_actors_description"),
 				type: "file",
@@ -118,7 +124,8 @@ var imdi_environment = (function(){
 	my.recall = function (settings){
 		
 		dom.setRadiosByValue(g("output_format"), settings.output_format);
-		APP.GUI.setToggleValue(g("radio_age_calc"),settings.calc_actors_age);
+		APP.GUI.setToggleValue(g("radio_age_calc"), settings.calc_actors_age);
+		APP.GUI.setToggleValue(g("preserve_hyphens"), settings.preserve_hyphens);
 		g("metadata_language_select").selectedIndex = settings.metadata_language;
 		g("metadata_creator").value = settings.metadata_creator;
 	
@@ -139,6 +146,8 @@ var imdi_environment = (function(){
 
 		object.output_format = dom.getSelectedRadioValue(g("output_format"));
 		object.calc_actors_age = g("radio_age_calc").on;
+		object.preserve_hyphens = g("preserve_hyphens").on;
+		
 		object.metadata_creator = get("metadata_creator");
 		object.metadata_language = g("metadata_language_select").selectedIndex;
 	

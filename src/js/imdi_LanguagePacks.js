@@ -48,7 +48,9 @@ imdi_environment.languages[0] = {
 			
 			global_language_of_metadata: "Global Language of Metadata",
 			cmdi_metadata_creator: "CMDI Metadata Creator",
-			cmdi_metadata_creator_description: "The CMDI metadata format requires the name of a metadata creator. This is probably you. If so, please type in your name."
+			cmdi_metadata_creator_description: "The CMDI metadata format requires the name of a metadata creator. This is probably you. If so, please type in your name.",
+			preserve_hyphens_in_session_and_filenames: "Preserve hyphens in session and file names",
+			preserve_hyphens_description: "By default, hyphens are not allowed in session and file names, as it troubled LAMUS. If you know what you are doing, you can turn this on to allow and preserve hyphens."
 			
 		},
 		
