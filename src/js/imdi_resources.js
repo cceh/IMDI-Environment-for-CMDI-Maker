@@ -453,7 +453,7 @@ imdi_environment.workflow[1] = (function(){
 	my.createSessionForResource = function(id){
 
 		var session_name = strings.replaceAccentBearingLettersWithASCISubstitute(strings.removeEndingFromFilename(my.resources.getByID(id).name));
-		session_name = strings.replaceCharactersInStringWithSubstitute(name, my.parent.not_allowed_chars, my.substitute_for_bad_chars);
+		session_name = strings.replaceCharactersInStringWithSubstitute(session_name, my.parent.not_allowed_chars, my.substitute_for_bad_chars);
 		
 		var expanded = false; //collapse automatically generated session
 		
