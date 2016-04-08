@@ -56,6 +56,9 @@ imdi_environment.workflow[1] = (function(){
 	
 	my.getFileType = function(filename){
 	
+
+		filename = filename.toLowerCase();
+
 		var file_types = my.file_types;
 
 		var index_of_dot = filename.lastIndexOf(".");
