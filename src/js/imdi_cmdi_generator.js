@@ -397,7 +397,7 @@ imdi_environment.cmdi_generator = function(data, l){
 				IDREFS.push(createIDREFS());
 				xml.open("ResourceProxy", [["id", IDREFS[i]]]);
 				xml.element("ResourceType", "Resource", [["mimeType", resources.getFileType(res_in_sess[i].name).mimetype]]);
-				xml.element("ResourceRef", "Ref");
+				xml.element("ResourceRef", res_in_sess[i].name);
 				xml.close("ResourceProxy");
 			}
 
