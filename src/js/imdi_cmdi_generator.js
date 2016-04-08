@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright 2014 Sebastian Zimmer
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -68,39 +68,41 @@ imdi_environment.cmdi_generator = function(data, l){
 
 	var insertCMDIHeader = function(corpus_or_session){
 		var profile_id;
-		
-		if ((corpus_or_session === 0) || (corpus_or_session == "corpus")){
+
+		if ((corpus_or_session === 0) || (corpus_or_session === "corpus")){
 			profile_id = imdi_corpus_profile;
 		}
 
-		else if ((corpus_or_session == 1) || (corpus_or_session == "session")){
+		else if ((corpus_or_session === 1) || (corpus_or_session === "session")){
 			profile_id = imdi_session_profile;
 		}
-		
+
 		else {
 			return APP.error("An error has occurred! Cannot insert CMDI header without knowing if session or corpus is wanted.");
 		}
-		
+
 		return xml.open("CMD",[["xmlns","http://www.clarin.eu/cmd/"],["xmlns:xsi","http://www.w3.org/2001/XMLSchema-instance"],
 		["CMDVersion","1.1"],["xsi:schemaLocation","http://www.clarin.eu/cmd/ http://catalog.clarin.eu/ds/ComponentRegistry/rest/registry/profiles/"+profile_id+"/xsd "]]);
 
 	};
 	
 	
-	var create_cmdi_session = function(content_languages, session, actors){
-		
+	var create_cmdi_session = function(content_languages, session, actors) {
+
 		xml.header();
 		insertCMDIHeader("session");
-		insertHeader(get("metadata_creator"), dates.today() + dates.getTimezoneOffsetInHours(),imdi_session_profile);
-		
-		//in resources is nothing, as this is a session and no corpus. attached media files in a cmdi session are further down
+		insertHeader(get("metadata_creator"), dates.today() + dates.getTimezoneOffsetInHours(), imdi_session_profile);
+
 		xml.open("Resources");
-		xml.element("ResourceProxyList", "");
+
+		// ResourceProxyList
+		// concat written and mediafile resources
+		var files = session.resources.resources.writtenResources.concat(session.resources.resources.mediaFiles);
+		insertResourceProxyList(files);
+
 		xml.element("JournalFileProxyList", "");
 		xml.element("ResourceRelationList", "");
-		xml.close("Resources");
-		xml.open("Components");
-		
+
 		/*
 		all imdi session metadata is in between the components tag, declared with tag <Session>
 		sadly, the structure of an imdi session is a little bit different in cmdi files
@@ -246,7 +248,7 @@ imdi_environment.cmdi_generator = function(data, l){
 		
 		xml.open("Resources");
 		
-		var id;
+		// var id;
 		
 		for (var r = 0; r < session.resources.resources.mediaFiles.length; r++){  
 	
@@ -254,7 +256,7 @@ imdi_environment.cmdi_generator = function(data, l){
 			
 		}
 		
-		for (r = 0; r < session.resources.resources.writtenResources.length; r++){  
+		for (var r = 0; r < session.resources.resources.writtenResources.length; r++){
 
 			insertWrittenResource(session.resources.resources.writtenResources[r]);
 			
@@ -267,7 +269,7 @@ imdi_environment.cmdi_generator = function(data, l){
 
 	};
 
-	
+
 	var insertContentLanguages = function (languages) {
 
 		for (var l = 0; l < languages.length; l++){  //for all content languages // no session separate languages yet
@@ -340,7 +342,6 @@ imdi_environment.cmdi_generator = function(data, l){
 
 	var insertMediafile = function(file){
 
-		
 		xml.open("MediaFile");
 		xml.element("ResourceLink", file.name);
 		xml.element("Type", resources.getFileType(file.name).type);
@@ -381,6 +382,31 @@ imdi_environment.cmdi_generator = function(data, l){
 		
 		xml.close("MediaFile");
 		
+	};
+
+	var insertResourceProxyList = function(res_in_sess){
+		var IDREFS = [];
+
+		console.log(res_in_sess);
+
+		if (res_in_sess.length > 0){
+			xml.open("ResourceProxyList");
+
+			for (var i = 0; i < res_in_sess.length; i++){
+
+				IDREFS.push(createIDREFS());
+				xml.open("ResourceProxy", [["id", IDREFS[i]]]);
+				xml.element("ResourceType", "Resource", [["mimeType", resources.getFileType(res_in_sess[i].name).mimetype]]);
+				xml.element("ResourceRef", "Ref");
+				xml.close("ResourceProxy");
+			}
+
+			xml.close("ResourceProxyList");
+		}
+
+		else {
+			xml.element("ResourceProxyList", "");
+		}
 	};
 
 
