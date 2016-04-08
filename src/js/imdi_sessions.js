@@ -1,4 +1,4 @@
-﻿/*
+/*
 Copyright 2014 Sebastian Zimmer
 
 Licensed under the Apache License, Version 2.0 (the "License");
@@ -448,7 +448,9 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 		
 		
 		//Rename the session if an EAF file is added for the first time and session has no name yet
-		if ((strings.getFileTypeFromFilename(filename) == "eaf") && (my.sessions.getByID(session_id).session.name === "")){
+		//condition is taken out since it is not desired. 16.11.2015
+        /* 
+        if ((strings.getFileTypeFromFilename(filename) == "eaf") && (my.sessions.getByID(session_id).session.name === "")){
 		
 			var name = strings.removeEndingFromFilename(res.name);
 			
@@ -457,7 +459,8 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 			APP.log(l("session", "session_name_taken_from_eaf"));
 		
 		}
-		
+	   */	
+    
 		
 		//Check, if there is a date string in the form of YYYY-MM-DD in the filename of an eaf file. If so, adopt it for the session date
 		//only, if session date is still YYYY
