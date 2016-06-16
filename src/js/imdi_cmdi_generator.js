@@ -95,10 +95,17 @@ imdi_environment.cmdi_generator = function(data, l){
 
 		xml.open("Resources");
 
-		// concat written and mediafile resources
-		var files = session.resources.resources.writtenResources.concat(session.resources.resources.mediaFiles);
-		// ResourceProxyList
-		insertResourceProxyList(files);
+		var mediaFiles = session.resources.resources.mediaFiles;
+		var writtenResources = session.resources.resources.writtenResources;
+
+		if (mediaFiles.length > 0 || writtenResources.length > 0){
+			xml.open("ResourceProxyList");
+			insertMediafilesProxyList(mediaFiles);
+			insertWrittenResourcesProxyList(writtenResources);
+			xml.close("ResourceProxyList");
+		} else {
+			xml.element("ResourceProxyList", "")
+		};
 
 		xml.element("JournalFileProxyList", "");
 		xml.element("ResourceRelationList", "");
@@ -132,33 +139,36 @@ imdi_environment.cmdi_generator = function(data, l){
 	};
 
 
-	var insertResourceProxyList = function(res_in_sess){
-
+	var insertMediafilesProxyList = function(mf_in_sess){
 		var IDREFS = [];
 
-		if (res_in_sess.length > 0){
-			xml.open("ResourceProxyList");
-
-			for (var i = 0; i < res_in_sess.length; i++){
-
+		if(mf_in_sess.length > 0){
+			for(var i = 0; i < mf_in_sess.length; i++){
 				IDREFS.push(createIDREFS());
 				xml.open("ResourceProxy", [["id", IDREFS[i]]]);
-				xml.element("ResourceType", "Resource", [["mimetype", resources.getFileType(res_in_sess[i].name).mimetype]]);
-				console.log(resources); // show in chrome logs of objects
-				xml.element("ResourceRef", res_in_sess[i].name);
+				xml.element("ResourceType", "Resource", [["mimetype", resources.getFileType(mf_in_sess[i].name).mimetype]]);
+				xml.element("ResourceRef", mf_in_sess[i].name);
 				xml.close("ResourceProxy");
 			}
-
-			xml.close("ResourceProxyList");
 		}
-		else {
-			xml.element("ResourceProxyList", "");
+		var IDREF_string_mf = IDREFS;
+	};
+
+
+	var insertWrittenResourcesProxyList = function(wr_in_sess){
+		var IDREFS = [];
+
+		if(wr_in_sess.length > 0){
+			for(var i = 0; i < wr_in_sess.length; i++){
+				IDREFS.push(createIDREFS());
+				xml.open("ResourceProxy", [["id", IDREFS[i]]]);
+				xml.element("ResourceType", "Resource", [["mimetype", resources.getFileType(wr_in_sess[i].name).mimetype]]);
+				xml.element("ResourceRef", wr_in_sess[i].name);
+				xml.close("ResourceProxy");
+			}
 		}
 
-
-       	var IDREFS_string = IDREFS.join(" ");
-		var getId = IDREFS_string;
-
+		var IDREF_string_wr = IDREFS;
 	};
 
     
