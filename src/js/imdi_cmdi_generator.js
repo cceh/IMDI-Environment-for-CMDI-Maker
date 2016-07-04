@@ -28,6 +28,10 @@ imdi_environment.cmdi_generator = function(data, l){
 
 	var resources = parent.workflow[1];
 	var actor = parent.workflow[2];
+	
+	var IDREFS = [];
+    	var mf_id;
+    	var wr_id;
 
 	var createIDREFS = function(){
 
@@ -149,9 +153,12 @@ imdi_environment.cmdi_generator = function(data, l){
 				xml.element("ResourceType", "Resource", [["mimetype", resources.getFileType(mf_in_sess[i].name).mimetype]]);
 				xml.element("ResourceRef", mf_in_sess[i].name);
 				xml.close("ResourceProxy");
+				
+				mf_id = mf_in_sess[i].name + ' ' + IDREFS[i];
+                		console.log(mf_id);
+                		mf_in_sess[i].idref = IDREFS[i];
 			}
 		}
-		var IDREF_string_mf = IDREFS;
 	};
 
 
@@ -165,10 +172,12 @@ imdi_environment.cmdi_generator = function(data, l){
 				xml.element("ResourceType", "Resource", [["mimetype", resources.getFileType(wr_in_sess[i].name).mimetype]]);
 				xml.element("ResourceRef", wr_in_sess[i].name);
 				xml.close("ResourceProxy");
+				
+				wr_id = wr_in_sess[i].name + ' ' + IDREFS[i];
+        			console.log(wr_id);
+		                wr_in_sess[i].idref = IDREFS[i];
 			}
 		}
-
-		var IDREF_string_wr = IDREFS;
 	};
 
     
@@ -329,8 +338,8 @@ imdi_environment.cmdi_generator = function(data, l){
 
 
 	var insertWrittenResource = function(file){
-
-		xml.open("WrittenResource");
+		insertWrittenResourcesProxyList(file);
+		xml.open("WrittenResource", [["ref", file.idref]]);
 		xml.element("ResourceLink", file.name);
 		xml.element("MediaResourceLink","");
 		xml.element("Date","Unspecified");
@@ -383,7 +392,8 @@ imdi_environment.cmdi_generator = function(data, l){
 
 
 	var insertMediafile = function(file){
-		xml.open("MediaFile");
+		insertMediafilesProxyList(file);
+		xml.open("MediaFile", [["ref", file.idref]]);
 		xml.element("ResourceLink", file.name);
 		xml.element("Type", resources.getFileType(file.name).type);
 		xml.element("Format", resources.getFileType(file.name).mimetype);
