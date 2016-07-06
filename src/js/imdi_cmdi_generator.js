@@ -208,7 +208,15 @@ imdi_environment.cmdi_generator = function(data, l){
 
 		xml.open("MDGroup");
 		xml.open("Location");
-		xml.element("Continent", session.session.location.continent);
+		
+		var elContinent = session.session.location.continent;
+
+        	if(elContinent == ""){
+        	xml.element("Continent", "Unspecified");
+		} else {
+        	 xml.element("Continent", elContinent);
+        	}
+        
 		xml.element("Country", session.session.location.country);
 		xml.element("Region", session.session.location.region);
 		xml.element("Address", session.session.location.address);
