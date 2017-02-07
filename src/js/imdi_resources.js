@@ -222,7 +222,15 @@ imdi_environment.workflow[1] = (function(){
 				icon: "reset",
 				label: l("resources", "clear_file_list"),
 				onclick: function() { my.resources.reset(); my.refresh(); }
-			}
+			},  
+            {
+                id: "environment_signal",
+	            icon: "textedit",
+	            label: l("environment", "signal"),
+	            onclick: function() { 
+            	my.signalNotification();
+            }
+        }
 		];
 	};
 	
@@ -259,6 +267,11 @@ imdi_environment.workflow[1] = (function(){
 		my.refresh(true);
 		
 	};
+
+
+	my.signalNotification = function() {
+        APP.log(my.l("environment", "signal_msg") + imdi_environment.version);
+    };
 
 	
 	my.getValidityOfFile = function(filename){

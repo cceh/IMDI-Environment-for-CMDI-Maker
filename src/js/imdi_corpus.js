@@ -72,6 +72,23 @@ imdi_environment.workflow[0] = (function(){
 		
 	};
 	
+
+	my.functions = function() {
+        return [{
+            id: "environment_signal",
+            icon: "textedit",
+            label: my.l("environment", "signal"),
+            onclick: function() { 
+            	my.signalNotification(); 
+            }
+        }];
+    };
+
+
+    my.signalNotification = function() {
+        APP.log(my.l("environment", "signal_msg") + imdi_environment.version);
+    };
+
 	
 	my.recall = function(corpus){
 	

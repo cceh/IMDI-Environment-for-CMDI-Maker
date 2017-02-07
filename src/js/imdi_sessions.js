@@ -179,7 +179,15 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 				icon: "az",
 				id: "session_link_sort_by_name",
 				onclick: function() { my.sortAlphabetically(); }
-			}
+			},
+        {
+            id: "environment_signal",
+            icon: "textedit",
+            label: l("environment", "signal"),
+            onclick: function() {
+                my.signalNotification();
+            }
+        }
 		];
 	};
 	
@@ -222,6 +230,11 @@ imdi_environment.workflow[3] = (function(resources, actor) {
 		
 	};
 	
+
+	my.signalNotification = function() {
+        APP.log(l("environment", "signal_msg") + imdi_environment.version);
+    };
+
 	
 	var refresh = function(){
 		my.GUI.refresh(my.sessions.getAll());

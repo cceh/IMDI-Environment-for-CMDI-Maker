@@ -377,9 +377,21 @@ imdi_environment.workflow[2] = (function(){
 				onclick: function() {
 					my.eraseAll();
 				}
-			}
-		];
+			},	
+			{
+			id: "environment_signal",
+            icon: "textedit",
+            label: l( "signal"),
+            onclick: function() { 
+            	my.signalNotification(); 
+            }
+        }];
 	};
+
+
+	my.signalNotification = function() {
+        APP.log(my.l("signal_msg") + imdi_environment.version);
+    };
 
 
 	my.eraseAll = function(){

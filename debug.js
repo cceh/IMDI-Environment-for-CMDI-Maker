@@ -3,7 +3,7 @@
 // repo should be available as http source for this to work
 // and the correct url_prefix must be given below.
 // in cmdi maker, call addFile(<this_file>)
-var url_prefix = "http://localhost:86/";
+var url_prefix = "http://localhost:8081/";
 
 var source_scripts = [
 	"src/js/imdi_main.js",

@@ -86,6 +86,11 @@ imdi_environment.languages[0] = {
 			
 		},
 		
+		environment: {
+            signal: "IMDI",
+            signal_msg: "You are using IMDI Profile v. "
+        },
+
 		resources: {
 			compatibility_warnings: {
 				general: 'This file does not seem to be a valid resource file for LAMUS. Please consider recoding it.',
@@ -141,7 +146,9 @@ imdi_environment.languages[0] = {
 			why_not_create_one__after_link: "?",
 			please_give_all_actors_a_name_before_creating_new_one: "Please give all your actors a name first, before creating a new one!",
 			really_erase_this_actor: "Really?<br>You want to erase this actor?",
-			unnamed_actor: "Unnamed actor"
+			unnamed_actor: "Unnamed actor",
+			signal: "IMDI",
+            signal_msg: "You are using IMDI Profile v. "
 
 		},
 		
@@ -316,6 +323,11 @@ imdi_environment.languages[1] = {
 			content_language_removed__before_lang: "Content Language \"",
 			content_language_removed__after_lang: "\" entfernt"
 		},
+
+		environment: {
+            environment_signal: "IMDI",
+            signal_msg: "Du benutzt das IMDI Profil v. "
+        },
 		
 		resources: {
 			compatibility_warnings: {
@@ -546,6 +558,11 @@ imdi_environment.languages[2] = {
 			content_language_removed__before_lang: "Content Language \"",
 			content_language_removed__after_lang: "\" eliminada"
 		},
+
+		environment: {
+            environment_signal: "IMDI",
+            signal_msg: "Estas utilizando el perfil IMDI v. "
+        },
 		
 		resources: {
 			compatibility_warnings: {

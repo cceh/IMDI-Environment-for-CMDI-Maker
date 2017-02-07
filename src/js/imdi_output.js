@@ -152,11 +152,22 @@ imdi_environment.workflow[4] = (function (){
 				icon: "download",
 				label: l("output", "download_zip_archive"),
 				onclick: function(){ APP.zipAllOutputFiles(); }
-			}
-		
-		];
+			},
+			{
+			id: "environment_signal",
+            icon: "textedit",
+            label: l("environment", "signal"),
+            onclick: function() { 
+            	my.signalNotification(); 
+            }
+        }];
 	};
 	
+
+	my.signalNotification = function() {
+        APP.log(l("environment", "signal_msg") + imdi_environment.version);
+    };
+
 
 	my.generate = function (){
 		var filename;
