@@ -405,7 +405,7 @@ imdi_environment.workflow[1] = (function(){
 				name: f.name,
 				mime_type: f.type || 'n/a',
 				size: strings.bytesToSize(f.size,1),
-				lastModified: f.lastModifiedDate.toLocaleDateString()
+				lastModified: f.lastModified
 			});
 		}
 		
